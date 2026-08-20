@@ -16,7 +16,7 @@ A feature is only marked `[x]` after both implementation and the relevant valida
 
 **Current phase:** Phase 1 — Discover & Acquire
 
-**Current milestone:** M1 — Target Discovery (partial)
+**Current milestone:** M2 — Raw Activity Acquisition
 
 Completed project setup:
 
@@ -24,7 +24,7 @@ Completed project setup:
 * [x] Python environment requirements defined
 * [x] Core dependencies selected
 * [ ] Repository execution pipeline implemented
-* [-] Codex Skill target-discovery entry point implemented
+* [x] Codex Skill target-discovery entry point implemented
 * [ ] Streamlit interface implemented
 
 Current dependency baseline:
@@ -77,7 +77,7 @@ scripts/discover_target.py
 * [x] Accept exactly one target query
 * [x] Support UniProt accession input
 * [x] Support ChEMBL target ID input
-* [-] Support exact ChEMBL preferred target-name lookup; generic name search remains open
+* [x] Support exact ChEMBL preferred target-name lookup; fuzzy expansion is intentionally deferred
 * [x] Query ChEMBL target data
 * [x] Return the fixed candidate-field schema from ChEMBL
 * [x] Return all candidates instead of silently selecting the first
@@ -102,9 +102,9 @@ target_type
 
 ### Tests
 
-* [ ] Unit test input validation
-* [ ] Unit test output schema normalization
-* [ ] Unit test multiple-candidate handling
+* [x] Unit test input validation
+* [x] Offline test preserves the candidate list and output contract
+* [x] Offline test covers multiple-candidate handling without a ChEMBL request
 * [x] Integration test with human EGFR / P00533
 
 ### Completion condition
@@ -115,7 +115,7 @@ P00533
 → structured candidate result containing the expected human EGFR target
 ```
 
-**Status:** in progress
+**Status:** complete
 
 ---
 
@@ -374,8 +374,8 @@ outputs/run_manifest.json
 
 ### Regression testing
 
-* [ ] Unit tests run without requiring live ChEMBL access
-* [ ] Network/integration tests are separable from unit tests
+* [x] Unit tests run without requiring live ChEMBL access
+* [x] Network/integration tests are separable from unit tests
 * [x] At least one known-target integration case exists
 * [ ] At least one second target verifies that the pipeline is not EGFR-specific
 * [ ] Previous working cases remain green after modifications
@@ -560,26 +560,25 @@ Status:
 
 # Immediate Next Step
 
-Complete the remaining M1 unit coverage and decide whether target-name lookup should support fuzzy search:
+Implement and validate raw activity acquisition:
 
 ```text
-scripts/discover_target.py
+scripts/fetch_activities.py
 ```
 
 First target:
 
 ```text
-P00533
+CHEMBL203
 ```
 
 Target milestone:
 
 ```text
-P00533
-→ ChEMBL query through chembl_webresource_client
-→ structured target candidates without local filtering
-→ expected human EGFR candidate present
-→ tests pass
+resolved target
++ selected activity type
+→ raw ChEMBL activity data
+→ reproducible saved artifact
 ```
 
 Do not proceed to activity cleaning, RDKit fingerprints, or Streamlit until this boundary works reliably.
