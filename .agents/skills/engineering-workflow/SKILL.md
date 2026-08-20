@@ -28,7 +28,13 @@ description: Build a ChEMBL IC50/pIC50 dataset for a biological target. Use when
    python .agents/skills/engineering-workflow/scripts/prepare_dataset.py --activities-csv output/raw-egfr/activities.csv --output-dir output/prepared-egfr
    ```
 
-5. Read `preparation_metadata.json` and report activity exclusions, structure-status counts, merge counts, fingerprint configuration, and cache setting. The client cache is disabled by default; use `--use-cache` only when the user explicitly requests it. Explain validation failures from the error output; do not claim a dataset was created when the command failed.
+5. Normalize exact IC50 values and produce statistics and rankings:
+
+   ```bash
+   python .agents/skills/engineering-workflow/scripts/analyze_dataset.py --prepared-csv output/prepared-egfr/prepared_dataset.csv --output-dir output/analysis-egfr
+   ```
+
+6. Read `statistics.json` and report exclusions, IC50/pIC50 descriptive statistics, and the top/bottom records. Explain validation failures from the error output; do not claim an analysis was created when the command failed.
 
 Use `--overwrite` only after the user authorizes replacing an existing `dataset.csv` or `statistics.json`.
 
@@ -46,8 +52,8 @@ Use this script only for discovery. Do not add local candidate filtering, sortin
 
 `scripts/prepare_dataset.py` accepts an M2 `activities.csv`. It converts required numeric fields, drops rows missing M3-required activity fields, removes exact duplicate rows, and keeps repeated measurements for the same molecule. It retrieves one ChEMBL structure per retained molecule, writes all structure statuses (`valid`, `missing_smiles`, or `invalid_smiles`), and merges only valid structures. The prepared dataset contains a Morgan fingerprint with radius 2 and 2048 bits, serialized as `bitstring:<bits>`. It does not convert units or calculate pIC50; those are M4 operations.
 
-## M4 validation policy (planned)
+## IC50 analysis script
 
-M4 will keep only IC50 records with exact `=` standard relation, no ChEMBL data-validity flag, a positive numeric value in `pM`, `nM`, `uM`, or `mM`, a molecule ID, and a valid RDKit-parsed canonical SMILES. It will convert accepted values to nM and calculate `pIC50 = 9 - log10(IC50_nM)`.
+`scripts/analyze_dataset.py` supports IC50 only. It preserves `standard_value` and `standard_units`, then retains exact `=` rows without a `data_validity_comment`, with a positive finite value and a supported unit (`pM`, `nM`, `uM`/`µM`/`μM`, or `mM`). It adds `ic50_nM` and `pIC50 = 9 - log10(IC50_nM)`, writes count/mean/median/standard deviation/quartiles/minimum/maximum for both metrics, and creates full-metadata top/bottom CSV files ranked by pIC50.
 
 Do not change endpoint fields, filtering rules, output columns, or fingerprint parameters without updating the corresponding deterministic script and tests.

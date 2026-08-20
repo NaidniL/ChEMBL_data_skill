@@ -254,54 +254,54 @@ scripts/analyze_dataset.py
 
 ### Property handling
 
-* [ ] Accept selected activity property
-* [ ] Define scientific direction of the property
-* [ ] Distinguish raw and transformed properties
-* [ ] Preserve raw measurements
+* [x] Accept IC50 as the selected activity property
+* [x] Define lower IC50 / higher pIC50 as stronger activity
+* [x] Distinguish raw IC50 from normalized and transformed fields
+* [x] Preserve raw measurements
 
 ### Unit handling
 
-* [ ] Inspect units
-* [ ] Convert supported units to a canonical scale
-* [ ] Detect unsupported units
-* [ ] Record conversion/exclusion counts
+* [x] Inspect units
+* [x] Convert pM, nM, uM/µM/μM, and mM to nM
+* [x] Detect unsupported units
+* [x] Record conversion/exclusion counts
 
 ### IC50 / pIC50
 
-* [ ] Require positive IC50 before logarithmic transformation
-* [ ] Implement molar IC50 → pIC50
-* [ ] Implement/verify nM shortcut
+* [x] Require finite positive IC50 before logarithmic transformation
+* [x] Implement IC50 → pIC50 after nM normalization
+* [x] Implement/verify nM shortcut
 
 Regression cases:
 
-* [ ] `1 nM → 9`
-* [ ] `100 nM → 7`
-* [ ] `1000 nM → 6`
+* [x] `1 nM → 9`
+* [x] `100 nM → 7`
+* [x] `1000 nM → 6`
 
 ### Relation operators
 
-* [ ] Preserve scientific meaning of `<`, `>`, `<=`, `>=`
-* [ ] Do not convert censored measurements into exact values
-* [ ] Default Version 0.1 quantitative dataset to exact `=` records where appropriate
-* [ ] Record excluded censored measurements
+* [x] Preserve scientific meaning of `<`, `>`, `<=`, `>=`
+* [x] Do not convert censored measurements into exact values
+* [x] Default Version 0.1 quantitative dataset to exact `=` records
+* [x] Record excluded censored measurements
 
 ### Statistics
 
-* [ ] Count records
-* [ ] Count unique molecules
-* [ ] Count missing values
-* [ ] Calculate mean
-* [ ] Calculate median
-* [ ] Calculate standard deviation
-* [ ] Calculate minimum/maximum
-* [ ] Calculate quartiles
+* [x] Count records
+* [x] Count unique molecules
+* [x] Count missing standard values as exclusions
+* [x] Calculate mean
+* [x] Calculate median
+* [x] Calculate standard deviation
+* [x] Calculate minimum/maximum
+* [x] Calculate quartiles
 
 ### Ranking
 
-* [ ] Generate top-N records
-* [ ] Generate bottom-N records
-* [ ] Use the scientifically correct sorting direction
-* [ ] Include useful metadata for ranked records
+* [x] Generate top-N records
+* [x] Generate bottom-N records
+* [x] Use pIC50 descending/ascending directions
+* [x] Include all analyzed metadata in ranked records
 
 ### Completion condition
 
@@ -314,7 +314,7 @@ prepared dataset
 → ranked records
 ```
 
-**Status:** not started
+**Status:** complete
 
 ---
 
@@ -492,10 +492,10 @@ These correspond to Section 30 of `workflow_spec.md`.
 * [x] **AC08** — Invalid or missing structures are handled explicitly.
 * [x] **AC09** — RDKit fingerprints are generated with recorded parameters.
 * [x] **AC10** — Activity and structure datasets are merged reproducibly.
-* [ ] **AC11** — IC50 values are standardized and converted to pIC50 correctly.
-* [ ] **AC12** — Descriptive statistics are generated deterministically.
-* [ ] **AC13** — High/low activity records are ranked with the correct direction.
-* [ ] **AC14** — Every destructive filtering stage reports exclusion counts.
+* [x] **AC11** — IC50 values are standardized and converted to pIC50 correctly.
+* [x] **AC12** — Descriptive statistics are generated deterministically.
+* [x] **AC13** — High/low activity records are ranked with the correct direction.
+* [x] **AC14** — Every destructive filtering stage reports exclusion counts.
 * [ ] **AC15** — The final dataset passes defined validation checks.
 * [ ] **AC16** — The Agent summarizes the run without inventing information.
 * [ ] **AC17** — A fresh Codex session can use the Skill without requiring knowledge of ChEMBL API details or internal column names.
@@ -503,7 +503,7 @@ These correspond to Section 30 of `workflow_spec.md`.
 Current acceptance progress:
 
 ```text
-Implemented and validated: 6 / 17
+Implemented and validated: 10 / 17
 ```
 
 ---
@@ -532,8 +532,8 @@ Status:
 * [x] Data preparation
 * [x] Structure acquisition
 * [x] Fingerprint generation
-* [ ] IC50/pIC50 processing
-* [ ] Statistics
+* [x] IC50/pIC50 processing
+* [x] Statistics
 * [ ] End-to-end validation
 
 ---
@@ -561,24 +561,25 @@ Status:
 
 # Immediate Next Step
 
-Implement property interpretation and analysis:
+Implement validation, provenance, and additional regression coverage:
 
 ```text
-scripts/analyze_dataset.py
+tests/
 ```
 
 First target:
 
 ```text
-outputs/prepared/prepared_dataset.csv
+M1–M4 artifacts
 ```
 
 Target milestone:
 
 ```text
-prepared dataset
-+ selected activity property
-→ pIC50 values, statistics, and rankings
+M1–M4 artifacts
+→ reconciled exclusions
+→ run manifest
+→ regression coverage
 ```
 
-Do not proceed to unit conversion, pIC50 transformation, or ranking until this boundary works reliably.
+Do not proceed to an interface or broader target coverage until this boundary works reliably.
