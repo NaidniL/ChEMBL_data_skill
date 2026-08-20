@@ -8,10 +8,12 @@ description: Build a ChEMBL IC50/pIC50 dataset for a biological target. Use when
 ## Workflow
 
 1. Ask for a biological target name, gene symbol, protein name, or ChEMBL target ID. If the requested target or species is ambiguous, do not choose a candidate silently.
-2. Resolve a human-readable target and show candidates:
+2. Resolve a target and show the returned candidates:
 
    ```bash
-   python .agents/skills/engineering-workflow/scripts/build_chembl_pic50_dataset.py targets --target "EGFR"
+   python .agents/skills/engineering-workflow/scripts/discover_target.py --target-name "Epidermal growth factor receptor"
+   python .agents/skills/engineering-workflow/scripts/discover_target.py --uniprot-accession P00533
+   python .agents/skills/engineering-workflow/scripts/discover_target.py --chembl-target-id CHEMBL203
    ```
 
 3. Confirm the intended `target_chembl_id` with the user, then build the dataset:
@@ -23,6 +25,12 @@ description: Build a ChEMBL IC50/pIC50 dataset for a biological target. Use when
 4. Read `statistics.json` and report the final row count, pIC50 range, and every exclusion count. Explain validation failures from the error output; do not claim a dataset was created when the command failed.
 
 Use `--overwrite` only after the user authorizes replacing an existing `dataset.csv` or `statistics.json`.
+
+## Target discovery script
+
+`scripts/discover_target.py` accepts exactly one of `--target-name`, `--uniprot-accession`, or `--chembl-target-id`, plus optional `--organism`. It emits JSON with the input metadata and a `candidates` list containing zero or more ChEMBL records with `target_chembl_id`, `organism`, `pref_name`, and `target_type`.
+
+Use this script only for discovery. Do not add local candidate filtering, sorting, deduplication, deletion, or field-value changes. The optional organism is a ChEMBL query constraint, not a local post-processing filter.
 
 ## Validation policy
 
