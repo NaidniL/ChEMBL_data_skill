@@ -183,49 +183,49 @@ scripts/prepare_dataset.py
 
 ### Activity-data preparation
 
-* [ ] Convert required fields to appropriate data types
-* [ ] Detect numeric conversion failures
-* [ ] Apply required-field missing-value policy
-* [ ] Preserve optional-field missingness
-* [ ] Remove exact duplicate observations
-* [ ] Preserve legitimate repeated measurements
-* [ ] Reset/rebuild indexes where appropriate
-* [ ] Normalize column names
+* [x] Convert required fields to appropriate data types
+* [x] Detect numeric conversion failures
+* [x] Apply required-field missing-value policy
+* [x] Preserve optional-field missingness
+* [x] Remove exact duplicate observations
+* [x] Preserve legitimate repeated measurements
+* [x] Reset/rebuild indexes where appropriate
+* [x] Normalize column names
 
 ### Repeated-measurement handling
 
-* [ ] Distinguish exact duplicates from repeated biological measurements
-* [ ] Default to `keep_all`
-* [ ] Do not silently choose `best`
-* [ ] Do not silently aggregate repeated measurements
-* [ ] Record aggregation strategy when aggregation is explicitly requested
+* [x] Distinguish exact duplicates from repeated biological measurements
+* [x] Default to `keep_all`
+* [x] Do not silently choose `best`
+* [x] Do not silently aggregate repeated measurements
+* [x] Record the `keep_all` aggregation strategy
 
 ### Structure acquisition
 
-* [ ] Extract unique molecule ChEMBL IDs
-* [ ] Fetch molecular structure data
-* [ ] Retain canonical SMILES
-* [ ] Remove/flag missing structure records
-* [ ] Parse SMILES with RDKit
-* [ ] Remove/flag invalid RDKit molecules
-* [ ] Remove equivalent structure-table duplicates by molecule ID when appropriate
-* [ ] Preserve structure exclusion counts
+* [x] Extract unique molecule ChEMBL IDs
+* [x] Fetch molecular structure data
+* [x] Retain canonical SMILES
+* [x] Mark missing structure records and exclude them from prepared data
+* [x] Parse SMILES with RDKit
+* [x] Mark invalid RDKit molecules and exclude them from prepared data
+* [x] Enforce one structure record per molecule ID
+* [x] Preserve structure exclusion counts
 
 ### Fingerprints
 
-* [ ] Select initial fingerprint representation
-* [ ] Define fingerprint parameters explicitly
-* [ ] Generate fingerprints from valid RDKit molecules
-* [ ] Validate consistent fingerprint dimensions
-* [ ] Record fingerprint configuration
-* [ ] Decide storage format for fingerprints
+* [x] Select Morgan bit fingerprints
+* [x] Define radius 2 and length 2048 explicitly
+* [x] Generate fingerprints from valid RDKit molecules
+* [x] Validate consistent fingerprint dimensions
+* [x] Record fingerprint configuration
+* [x] Store prefixed bitstrings in the prepared CSV
 
 ### Merge
 
-* [ ] Merge activity and structure data using `molecule_chembl_id`
-* [ ] Validate merge keys
-* [ ] Record rows before and after merge
-* [ ] Record activity rows lost because no valid structure was available
+* [x] Merge activity and structure data using `molecule_chembl_id`
+* [x] Validate one structure record per merge key
+* [x] Record rows before and after merge
+* [x] Record activity rows lost because no valid structure was available
 
 ### Completion condition
 
@@ -238,7 +238,7 @@ raw activity data
 → merged analysis-ready dataset
 ```
 
-**Status:** not started
+**Status:** complete
 
 ---
 
@@ -486,12 +486,12 @@ These correspond to Section 30 of `workflow_spec.md`.
 * [ ] **AC02** — The workflow can resolve an appropriate ChEMBL target.
 * [ ] **AC03** — The workflow can retrieve the requested activity type.
 * [ ] **AC04** — The raw activity dataset is preserved.
-* [ ] **AC05** — Required activity fields are cleaned deterministically.
-* [ ] **AC06** — Repeated measurements are not silently collapsed.
-* [ ] **AC07** — Molecular structures are retrieved and validated.
-* [ ] **AC08** — Invalid or missing structures are handled explicitly.
-* [ ] **AC09** — RDKit fingerprints are generated with recorded parameters.
-* [ ] **AC10** — Activity and structure datasets are merged reproducibly.
+* [x] **AC05** — Required activity fields are cleaned deterministically.
+* [x] **AC06** — Repeated measurements are not silently collapsed.
+* [x] **AC07** — Molecular structures are retrieved and validated.
+* [x] **AC08** — Invalid or missing structures are handled explicitly.
+* [x] **AC09** — RDKit fingerprints are generated with recorded parameters.
+* [x] **AC10** — Activity and structure datasets are merged reproducibly.
 * [ ] **AC11** — IC50 values are standardized and converted to pIC50 correctly.
 * [ ] **AC12** — Descriptive statistics are generated deterministically.
 * [ ] **AC13** — High/low activity records are ranked with the correct direction.
@@ -503,7 +503,7 @@ These correspond to Section 30 of `workflow_spec.md`.
 Current acceptance progress:
 
 ```text
-Implemented and validated: 0 / 17
+Implemented and validated: 6 / 17
 ```
 
 ---
@@ -528,10 +528,10 @@ Purpose:
 Status:
 
 * [x] Target discovery
-* [ ] Activity acquisition
-* [ ] Data preparation
-* [ ] Structure acquisition
-* [ ] Fingerprint generation
+* [x] Activity acquisition
+* [x] Data preparation
+* [x] Structure acquisition
+* [x] Fingerprint generation
 * [ ] IC50/pIC50 processing
 * [ ] Statistics
 * [ ] End-to-end validation
@@ -561,24 +561,24 @@ Status:
 
 # Immediate Next Step
 
-Implement data preparation and structure integration:
+Implement property interpretation and analysis:
 
 ```text
-scripts/prepare_dataset.py
+scripts/analyze_dataset.py
 ```
 
 First target:
 
 ```text
-outputs/raw/activities.csv
+outputs/prepared/prepared_dataset.csv
 ```
 
 Target milestone:
 
 ```text
-raw activity data
-+ molecular structures
-→ cleaned structure-associated dataset
+prepared dataset
++ selected activity property
+→ pIC50 values, statistics, and rankings
 ```
 
-Do not proceed to activity cleaning, RDKit fingerprints, or Streamlit until this boundary works reliably.
+Do not proceed to unit conversion, pIC50 transformation, or ranking until this boundary works reliably.
