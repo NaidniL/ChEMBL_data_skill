@@ -16,9 +16,6 @@ import re
 import sys
 from typing import Any
 
-from chembl_webresource_client.new_client import new_client
-
-
 CANDIDATE_FIELDS = ("target_chembl_id", "organism", "pref_name", "target_type")
 UNIPROT_ACCESSION = re.compile(r"^[A-Z0-9]{6,10}$")
 CHEMBL_TARGET_ID = re.compile(r"^CHEMBL\d+$")
@@ -30,6 +27,7 @@ QUERY_FIELDS = {
     "uniprot_accession": "target_components__accession",
     "chembl_target_id": "target_chembl_id",
 }
+new_client: Any | None = None
 
 
 def parse_args() -> argparse.Namespace:
@@ -63,6 +61,11 @@ def target_query(args: argparse.Namespace) -> tuple[str, str, dict[str, str]]:
 
 
 def discover_targets(args: argparse.Namespace) -> dict[str, Any]:
+    global new_client
+    if new_client is None:
+        from chembl_webresource_client.new_client import new_client as chembl_client
+
+        new_client = chembl_client
     identifier_type, value, query = target_query(args)
     candidates = list(new_client.target.get(**query).only(*CANDIDATE_FIELDS))
     return {

@@ -16,7 +16,7 @@ A feature is only marked `[x]` after both implementation and the relevant valida
 
 **Current phase:** Phase 1 — Discover & Acquire
 
-**Current milestone:** M2 — Raw Activity Acquisition
+**Current milestone:** M3 — Data Preparation and Structure Integration
 
 Completed project setup:
 
@@ -131,17 +131,18 @@ scripts/fetch_activities.py
 
 ### Implementation
 
-* [ ] Accept resolved ChEMBL target ID
-* [ ] Accept requested activity type
-* [ ] Query ChEMBL activity records
-* [ ] Inspect available activity types
-* [ ] Inspect available standard units
-* [ ] Inspect relation operators
-* [ ] Define and verify core activity columns
-* [ ] Retain optional columns when justified by the analysis goal
-* [ ] Convert API response into a pandas DataFrame
-* [ ] Preserve raw data before destructive processing
-* [ ] Save raw activity data
+* [x] Accept resolved ChEMBL target ID
+* [x] Accept requested activity type
+* [x] Query ChEMBL activity records
+* [x] Verify returned standard activity type matches the request
+* [x] Preserve returned standard units for later inspection
+* [x] Preserve returned relation operators for later inspection
+* [x] Define and verify the agreed core activity columns
+* [x] Restrict Version 0.1 raw output to the agreed core schema
+* [x] Convert API response into a pandas DataFrame
+* [x] Preserve raw data without destructive processing
+* [x] Save raw activity data and metadata
+* [x] Disable ChEMBL client cache by default and record its setting in metadata
 
 Expected artifact:
 
@@ -151,11 +152,11 @@ outputs/raw/activities.csv
 
 ### Validation
 
-* [ ] Required raw fields exist
-* [ ] Retrieved target matches requested target
-* [ ] Requested activity type is available
-* [ ] Raw record count is recorded
-* [ ] Empty datasets fail clearly
+* [x] Required raw fields exist
+* [x] Retrieved target matches requested target
+* [x] Requested activity type is available
+* [x] Raw record count is recorded
+* [x] Empty datasets fail clearly
 
 ### Completion condition
 
@@ -166,7 +167,7 @@ resolved target
 → reproducible raw activities.csv
 ```
 
-**Status:** not started
+**Status:** complete
 
 ---
 
@@ -378,7 +379,7 @@ outputs/run_manifest.json
 * [x] Network/integration tests are separable from unit tests
 * [x] At least one known-target integration case exists
 * [ ] At least one second target verifies that the pipeline is not EGFR-specific
-* [ ] Previous working cases remain green after modifications
+* [x] Previous working cases remain green after modifications
 
 **Status:** not started
 
@@ -560,25 +561,24 @@ Status:
 
 # Immediate Next Step
 
-Implement and validate raw activity acquisition:
+Implement data preparation and structure integration:
 
 ```text
-scripts/fetch_activities.py
+scripts/prepare_dataset.py
 ```
 
 First target:
 
 ```text
-CHEMBL203
+outputs/raw/activities.csv
 ```
 
 Target milestone:
 
 ```text
-resolved target
-+ selected activity type
-→ raw ChEMBL activity data
-→ reproducible saved artifact
+raw activity data
++ molecular structures
+→ cleaned structure-associated dataset
 ```
 
 Do not proceed to activity cleaning, RDKit fingerprints, or Streamlit until this boundary works reliably.
