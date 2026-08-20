@@ -1,0 +1,4 @@
+interface:
+  display_name: "ChEMBL pIC50 Dataset"
+  short_description: "Build validated ChEMBL pIC50 datasets"
+  default_prompt: "Use $engineering-workflow to build a ChEMBL pIC50 dataset for my target."
