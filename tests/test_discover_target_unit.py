@@ -12,7 +12,7 @@ from pathlib import Path
 import importlib.util
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / ".agents/skills/engineering-workflow/scripts/discover_target.py"
+SCRIPT = Path(__file__).resolve().parents[1] / ".agents/skills/chembl-workflow/scripts/discover_target.py"
 SPEC = importlib.util.spec_from_file_location("discover_target", SCRIPT)
 discover_target = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None

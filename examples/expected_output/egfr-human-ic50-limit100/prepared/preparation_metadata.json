@@ -1,0 +1,60 @@
+{
+  "raw_activity_rows": 100,
+  "dropped_missing_required_fields": 6,
+  "dropped_exact_duplicate_rows": 0,
+  "numeric_conversion_failures": {
+    "activity_id": 0,
+    "standard_value": 0,
+    "pchembl_value": 0,
+    "potential_duplicate": 0
+  },
+  "cleaned_activity_rows": 94,
+  "aggregation_strategy": "keep_all",
+  "structure_records_retrieved": 79,
+  "valid_structures": 79,
+  "missing_smiles": 0,
+  "invalid_smiles": 0,
+  "activity_rows_before_merge": 94,
+  "activity_rows_after_merge": 94,
+  "activity_rows_lost_no_valid_structure": 0,
+  "unique_molecules_requested": 79,
+  "client_cache_enabled": false,
+  "activity_cleaning": {
+    "columns": [
+      "activity_id",
+      "molecule_chembl_id",
+      "target_chembl_id",
+      "assay_chembl_id",
+      "standard_type",
+      "standard_relation",
+      "standard_value",
+      "standard_units",
+      "pchembl_value",
+      "data_validity_comment",
+      "potential_duplicate"
+    ],
+    "required_columns": [
+      "activity_id",
+      "molecule_chembl_id",
+      "standard_type",
+      "standard_relation",
+      "standard_value",
+      "standard_units"
+    ],
+    "exact_duplicate_policy": "remove rows identical across all activity columns"
+  },
+  "structure_validation": {
+    "statuses": [
+      "valid",
+      "missing_smiles",
+      "invalid_smiles"
+    ],
+    "validity_check": "RDKit Chem.MolFromSmiles"
+  },
+  "fingerprint": {
+    "type": "Morgan",
+    "radius": 2,
+    "length": 2048,
+    "storage": "bitstring: prefix followed by a 2048-character bitstring in prepared_dataset.csv"
+  }
+}

@@ -11,7 +11,7 @@ import pandas as pd
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = PROJECT_ROOT / ".agents/skills/engineering-workflow/scripts/analyze_dataset.py"
+SCRIPT = PROJECT_ROOT / ".agents/skills/chembl-workflow/scripts/analyze_dataset.py"
 
 
 class AnalyzeDatasetTest(unittest.TestCase):

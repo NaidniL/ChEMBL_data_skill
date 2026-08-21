@@ -1,0 +1,17 @@
+molecule_chembl_id,canonical_smiles,structure_status
+CHEMBL68920,Cc1cc(C)c(/C=C2\C(=O)Nc3ncnc(Nc4ccc(F)c(Cl)c4)c32)[nH]1,valid
+CHEMBL69960,Cc1cc(C(=O)N2CCOCC2)[nH]c1/C=C1\C(=O)Nc2ncnc(Nc3ccc(F)c(Cl)c3)c21,valid
+CHEMBL137635,CN(c1ccccc1)c1ncnc2ccc(N/N=N/Cc3ccccn3)cc12,valid
+CHEMBL306988,CC(=C(C#N)C#N)c1ccc(NC(=O)CCC(=O)O)cc1,valid
+CHEMBL66879,O=C(O)/C=C/c1ccc(O)cc1,valid
+CHEMBL77085,N#CC(C#N)=Cc1cc(O)ccc1[N+](=O)[O-],valid
+CHEMBL443268,Cc1cc(C(=O)NCCN2CCOCC2)[nH]c1/C=C1\C(=O)N(C)c2ncnc(Nc3ccc(F)c(Cl)c3)c21,valid
+CHEMBL76979,COc1cc(/C=C(\C#N)C(=O)O)cc(OC)c1O,valid
+CHEMBL76589,N#CC(C#N)=C(N)/C(C#N)=C/c1ccc(O)cc1,valid
+CHEMBL77724,COc1cc(C=C(C#N)C#N)cc(OC)c1,valid
+CHEMBL420385,N#CC(C#N)=Cc1ccc(N2CCOCC2)cc1,valid
+CHEMBL76904,N#CC(C#N)=Cc1ccc(O)c(O)c1,valid
+CHEMBL1009,N[C@@H](Cc1ccc(O)c(O)c1)C(=O)O,valid
+CHEMBL304271,CCN(CC)CC(O)CNC(=O)c1cc(C)c(/C=C2\C(=O)Nc3ncnc(Nc4ccc(F)c(Cl)c4)c32)[nH]1,valid
+CHEMBL296407,N#C/C(=C\c1ccc(O)c(O)c1)C(N)=O,valid
+CHEMBL309625,N#CC(C#N)=C(N)/C(C#N)=C/c1ccc(O)c([N+](=O)[O-])c1,valid

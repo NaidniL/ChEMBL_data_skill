@@ -10,7 +10,7 @@ from unittest.mock import patch
 import pandas as pd
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / ".agents/skills/engineering-workflow/scripts/analyze_dataset.py"
+SCRIPT = Path(__file__).resolve().parents[1] / ".agents/skills/chembl-workflow/scripts/analyze_dataset.py"
 SPEC = importlib.util.spec_from_file_location("analyze_dataset", SCRIPT)
 analyze_dataset = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None

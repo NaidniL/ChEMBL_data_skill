@@ -12,7 +12,7 @@ import pandas as pd
 from requests.exceptions import ProxyError
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / ".agents/skills/engineering-workflow/scripts/prepare_dataset.py"
+SCRIPT = Path(__file__).resolve().parents[1] / ".agents/skills/chembl-workflow/scripts/prepare_dataset.py"
 SPEC = importlib.util.spec_from_file_location("prepare_dataset", SCRIPT)
 prepare_dataset = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None

@@ -21,10 +21,10 @@ def load_module(name: str, relative_script: str):
     return module
 
 
-prepare_dataset = load_module("prepare_dataset_m5", ".agents/skills/engineering-workflow/scripts/prepare_dataset.py")
-analyze_dataset = load_module("analyze_dataset_m5", ".agents/skills/engineering-workflow/scripts/analyze_dataset.py")
-build_run_manifest = load_module("build_run_manifest_m5", ".agents/skills/engineering-workflow/scripts/build_run_manifest.py")
-validate_run = load_module("validate_run_m5", ".agents/skills/engineering-workflow/scripts/validate_run.py")
+prepare_dataset = load_module("prepare_dataset_m5", ".agents/skills/chembl-workflow/scripts/prepare_dataset.py")
+analyze_dataset = load_module("analyze_dataset_m5", ".agents/skills/chembl-workflow/scripts/analyze_dataset.py")
+build_run_manifest = load_module("build_run_manifest_m5", ".agents/skills/chembl-workflow/scripts/build_run_manifest.py")
+validate_run = load_module("validate_run_m5", ".agents/skills/chembl-workflow/scripts/validate_run.py")
 
 
 def raw_record(**changes: object) -> dict[str, object]:

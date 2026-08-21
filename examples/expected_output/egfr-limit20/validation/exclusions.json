@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "records": [
+    {
+      "stage": "M2_raw_acquisition",
+      "input_records": 20,
+      "newly_excluded_records": 0,
+      "reason": null,
+      "output_records": 20
+    },
+    {
+      "stage": "M3_required_activity_fields",
+      "input_records": 20,
+      "newly_excluded_records": 0,
+      "reason": "missing required activity field",
+      "output_records": 20
+    },
+    {
+      "stage": "M3_exact_duplicates",
+      "input_records": 20,
+      "newly_excluded_records": 0,
+      "reason": "exact duplicate activity row",
+      "output_records": 20
+    },
+    {
+      "stage": "M3_structure_merge",
+      "input_records": 20,
+      "newly_excluded_records": 0,
+      "reason": "no valid molecular structure",
+      "output_records": 20
+    },
+    {
+      "stage": "M4_wrong_activity_type",
+      "input_records": 20,
+      "newly_excluded_records": 0,
+      "reason": "wrong_activity_type",
+      "output_records": 20
+    },
+    {
+      "stage": "M4_non_exact_relation",
+      "input_records": 20,
+      "newly_excluded_records": 2,
+      "reason": "non_exact_relation",
+      "output_records": 18
+    },
+    {
+      "stage": "M4_outside_typical_range",
+      "input_records": 18,
+      "newly_excluded_records": 4,
+      "reason": "outside_typical_range",
+      "output_records": 14
+    },
+    {
+      "stage": "M4_missing_standard_value",
+      "input_records": 14,
+      "newly_excluded_records": 0,
+      "reason": "missing_standard_value",
+      "output_records": 14
+    },
+    {
+      "stage": "M4_invalid_standard_value",
+      "input_records": 14,
+      "newly_excluded_records": 0,
+      "reason": "invalid_standard_value",
+      "output_records": 14
+    },
+    {
+      "stage": "M4_non_positive_standard_value",
+      "input_records": 14,
+      "newly_excluded_records": 0,
+      "reason": "non_positive_standard_value",
+      "output_records": 14
+    },
+    {
+      "stage": "M4_unsupported_or_missing_unit",
+      "input_records": 14,
+      "newly_excluded_records": 0,
+      "reason": "unsupported_or_missing_unit",
+      "output_records": 14
+    }
+  ],
+  "structure_quality": {
+    "structure_records_retrieved": 16,
+    "valid_structures": 16,
+    "missing_smiles": 0,
+    "invalid_smiles": 0
+  },
+  "final_analyzed_records": 14
+}

@@ -1,0 +1,74 @@
+{
+  "input_records": 20,
+  "activity_type": "IC50",
+  "exact_relation_required": "=",
+  "canonical_ic50_unit": "nM",
+  "unit_to_nM_factors": {
+    "pM": 0.001,
+    "nM": 1.0,
+    "uM": 1000.0,
+    "\u00b5M": 1000.0,
+    "\u03bcM": 1000.0,
+    "mM": 1000000.0
+  },
+  "semantic_filter": {
+    "activity_type": "IC50",
+    "standard_relation": "=",
+    "data_validity_comment": {
+      "accepted": null,
+      "excluded": [
+        "Outside typical range"
+      ],
+      "unknown_non_null": "fail / report for review"
+    },
+    "standard_value": "finite and greater than zero",
+    "supported_units": [
+      "pM",
+      "nM",
+      "uM",
+      "\u00b5M",
+      "\u03bcM",
+      "mM"
+    ]
+  },
+  "transformation": "pIC50 = 9 - log10(ic50_nM)",
+  "exclusions": {
+    "wrong_activity_type": 0,
+    "non_exact_relation": 2,
+    "outside_typical_range": 4,
+    "missing_standard_value": 0,
+    "invalid_standard_value": 0,
+    "non_positive_standard_value": 0,
+    "unsupported_or_missing_unit": 0
+  },
+  "analyzed_records": 14,
+  "unique_molecules": 10,
+  "statistics": {
+    "ic50_nM": {
+      "count": 14,
+      "mean": 16039.032142857144,
+      "median": 2875.0,
+      "standard_deviation": 28710.306615044166,
+      "minimum": 0.45,
+      "q1": 136.25,
+      "q3": 9825.0,
+      "maximum": 96000.0
+    },
+    "pIC50": {
+      "count": 14,
+      "mean": 5.985195430151146,
+      "median": 5.815726401216171,
+      "standard_deviation": 1.5095016576884408,
+      "minimum": 4.017728766960432,
+      "q1": 5.0078792628615165,
+      "q3": 6.869705259899389,
+      "maximum": 9.346787486224656
+    }
+  },
+  "ranking": {
+    "metric": "pIC50",
+    "top_order": "descending; higher pIC50 indicates stronger activity",
+    "bottom_order": "ascending; lower pIC50 indicates weaker activity",
+    "records_per_output": 10
+  }
+}

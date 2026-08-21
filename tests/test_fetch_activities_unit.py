@@ -14,7 +14,7 @@ from unittest.mock import Mock, patch
 from requests.exceptions import ProxyError
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / ".agents/skills/engineering-workflow/scripts/fetch_activities.py"
+SCRIPT = Path(__file__).resolve().parents[1] / ".agents/skills/chembl-workflow/scripts/fetch_activities.py"
 SPEC = importlib.util.spec_from_file_location("fetch_activities", SCRIPT)
 fetch_activities = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None

@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = PROJECT_ROOT / ".agents/skills/engineering-workflow/scripts/discover_target.py"
+SCRIPT = PROJECT_ROOT / ".agents/skills/chembl-workflow/scripts/discover_target.py"
 
 
 class DiscoverTargetTest(unittest.TestCase):

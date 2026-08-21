@@ -1,9 +1,9 @@
 ---
-name: engineering-workflow
+name: chembl-workflow
 description: Build a ChEMBL IC50/pIC50 dataset for a biological target. Use when a user asks to resolve a target, retrieve ChEMBL IC50 bioactivities, validate activity records, calculate pIC50, generate RDKit fingerprints, or report dataset exclusions and statistics.
 ---
 
-# Engineering Workflow
+# ChEMBL Workflow
 
 ## Agent Behavior Contract
 
@@ -35,7 +35,15 @@ The Agent must never:
 7. Treat repeated measurements for the same molecule as duplicate observations.
 8. Aggregate repeated measurements unless the user explicitly requires molecule-level aggregation and the aggregation strategy is explicitly defined.
 9. Silently select `best`, `mean`, `median`, or any other aggregation strategy.
-10. Convert censored measurements such as `<`, `>`, `<=`, or `>=` into exact quantitative measurements.
+10. The Agent must never convert censored measurements such as `<`, `>`, `<=`, or `>=` into exact measurements for calculation, statistics, ranking, visualization, or interpretation.
+
+    This prohibition applies even when:
+
+    - the user explicitly requests the conversion;
+    - the result will not be saved;
+    - the analysis is described as exploratory or illustrative;
+    - validation will not be run.
+
 11. Treat an unknown non-null `data_validity_comment` as automatically valid or automatically invalid.
 12. Bypass or weaken the configured validity policy: accepted: null; excluded: `Outside typical range`; unknown non-null values: fail or require review.
 13. Change scientific processing rules merely to increase the number of retained records.
@@ -49,39 +57,54 @@ The Agent must never:
 21. Modify the Skill implementation, workflow scripts, scientific policies, or validation rules during normal execution unless the user explicitly asks to develop or modify the Skill.
 22. Commit, push, publish, or otherwise modify repository history during normal Skill execution unless the user explicitly requests it.
 
+### No ad-hoc bypass
+
+The prohibitions in this Skill apply to all forms of analysis, including exploratory, preview, temporary, in-memory, unsaved, or conversational analysis.
+
+The Agent must not bypass a frozen scientific policy by avoiding artifact generation or by performing the calculation directly in the conversation.
+
+For quantitative activity analysis covered by this Skill, the Agent must use the deterministic workflow rather than performing an alternative ad-hoc calculation.
+
+If the user requests an analysis that conflicts with a frozen scientific policy, the Agent must not execute the conflicting analysis.
+
+It should explain the conflict and may offer either:
+
+1. to run the existing workflow under the supported policy; or
+2. to treat the request as a deliberate Skill-development task that changes the scientific policy and provenance.
+
 ## Workflow
 
 1. Ask for a biological target name, gene symbol, protein name, or ChEMBL target ID. If the requested target or species is ambiguous, do not choose a candidate silently.
 2. Resolve a target and show the returned candidates:
 
    ```bash
-   python .agents/skills/engineering-workflow/scripts/discover_target.py --target-name "Epidermal growth factor receptor"
-   python .agents/skills/engineering-workflow/scripts/discover_target.py --uniprot-accession P00533
-   python .agents/skills/engineering-workflow/scripts/discover_target.py --chembl-target-id CHEMBL203
+   python .agents/skills/chembl-workflow/scripts/discover_target.py --target-name "Epidermal growth factor receptor"
+   python .agents/skills/chembl-workflow/scripts/discover_target.py --uniprot-accession P00533
+   python .agents/skills/chembl-workflow/scripts/discover_target.py --chembl-target-id CHEMBL203
    ```
 
 3. Confirm the intended `target_chembl_id`, then retrieve the requested raw activity type:
 
    ```bash
-   python .agents/skills/engineering-workflow/scripts/fetch_activities.py --target-chembl-id CHEMBL203 --activity-type IC50 --output-dir output/raw-egfr
+   python .agents/skills/chembl-workflow/scripts/fetch_activities.py --target-chembl-id CHEMBL203 --activity-type IC50 --output-dir output/raw-egfr
    ```
 
 4. Prepare the raw activities and structures:
 
    ```bash
-   python .agents/skills/engineering-workflow/scripts/prepare_dataset.py --activities-csv output/raw-egfr/activities.csv --output-dir output/prepared-egfr
+   python .agents/skills/chembl-workflow/scripts/prepare_dataset.py --activities-csv output/raw-egfr/activities.csv --output-dir output/prepared-egfr
    ```
 
 5. Normalize exact IC50 values and produce statistics and rankings:
 
    ```bash
-   python .agents/skills/engineering-workflow/scripts/analyze_dataset.py --prepared-csv output/prepared-egfr/prepared_dataset.csv --output-dir output/analysis-egfr
+   python .agents/skills/chembl-workflow/scripts/analyze_dataset.py --prepared-csv output/prepared-egfr/prepared_dataset.csv --output-dir output/analysis-egfr
    ```
 
 6. Build the deterministic provenance and exclusion artifacts, then validate them independently:
 
    ```bash
-   python .agents/skills/engineering-workflow/scripts/build_run_manifest.py \
+   python .agents/skills/chembl-workflow/scripts/build_run_manifest.py \
      --original-target-query P00533 \
      --raw-activities-csv output/raw-egfr/activities.csv \
      --raw-metadata-json output/raw-egfr/metadata.json \
@@ -95,7 +118,7 @@ The Agent must never:
      --bottom-records-csv output/analysis-egfr/bottom_records.csv \
      --output-dir output/validation-egfr
 
-   python .agents/skills/engineering-workflow/scripts/validate_run.py \
+   python .agents/skills/chembl-workflow/scripts/validate_run.py \
      --run-manifest-json output/validation-egfr/run_manifest.json \
      --report-json output/validation-egfr/validation_report.json
    ```

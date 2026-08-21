@@ -1,0 +1,137 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-21T02:49:06.248344+00:00",
+  "artifacts": {
+    "raw_activities_csv": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/raw/activities.csv",
+    "raw_metadata_json": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/raw/metadata.json",
+    "cleaned_activities_csv": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/prepared/activities_clean.csv",
+    "structures_csv": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/prepared/structures.csv",
+    "preparation_metadata_json": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/prepared/preparation_metadata.json",
+    "prepared_csv": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/prepared/prepared_dataset.csv",
+    "analyzed_csv": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/analysis/analyzed_dataset.csv",
+    "statistics_json": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/analysis/statistics.json",
+    "top_records_csv": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/analysis/top_records.csv",
+    "bottom_records_csv": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/analysis/bottom_records.csv",
+    "exclusions_json": "/Users/lydia/Desktop/skill-workflow/chembl-workflow/examples/expected_output/egfr-human-ic50-limit100/validation/exclusions.json"
+  },
+  "configuration": {
+    "acquisition": {
+      "target_chembl_id": "CHEMBL203",
+      "original_target_query": "P00533",
+      "activity_type": "IC50",
+      "query_limit": 100,
+      "client_cache_enabled": false,
+      "raw_columns": [
+        "activity_id",
+        "molecule_chembl_id",
+        "target_chembl_id",
+        "assay_chembl_id",
+        "standard_type",
+        "standard_relation",
+        "standard_value",
+        "standard_units",
+        "pchembl_value",
+        "data_validity_comment",
+        "potential_duplicate"
+      ]
+    },
+    "base_preparation": {
+      "activity_cleaning": {
+        "columns": [
+          "activity_id",
+          "molecule_chembl_id",
+          "target_chembl_id",
+          "assay_chembl_id",
+          "standard_type",
+          "standard_relation",
+          "standard_value",
+          "standard_units",
+          "pchembl_value",
+          "data_validity_comment",
+          "potential_duplicate"
+        ],
+        "required_columns": [
+          "activity_id",
+          "molecule_chembl_id",
+          "standard_type",
+          "standard_relation",
+          "standard_value",
+          "standard_units"
+        ],
+        "exact_duplicate_policy": "remove rows identical across all activity columns"
+      },
+      "aggregation_strategy": "keep_all",
+      "structure_validation": {
+        "statuses": [
+          "valid",
+          "missing_smiles",
+          "invalid_smiles"
+        ],
+        "validity_check": "RDKit Chem.MolFromSmiles"
+      },
+      "fingerprint": {
+        "type": "Morgan",
+        "radius": 2,
+        "length": 2048,
+        "storage": "bitstring: prefix followed by a 2048-character bitstring in prepared_dataset.csv"
+      },
+      "client_cache_enabled": false
+    },
+    "semantic_analysis": {
+      "semantic_filter": {
+        "activity_type": "IC50",
+        "standard_relation": "=",
+        "data_validity_comment": {
+          "accepted": null,
+          "excluded": [
+            "Outside typical range"
+          ],
+          "unknown_non_null": "fail / report for review"
+        },
+        "standard_value": "finite and greater than zero",
+        "supported_units": [
+          "pM",
+          "nM",
+          "uM",
+          "\u00b5M",
+          "\u03bcM",
+          "mM"
+        ]
+      },
+      "canonical_ic50_unit": "nM",
+      "unit_to_nM_factors": {
+        "pM": 0.001,
+        "nM": 1.0,
+        "uM": 1000.0,
+        "\u00b5M": 1000.0,
+        "\u03bcM": 1000.0,
+        "mM": 1000000.0
+      },
+      "transformation": "pIC50 = 9 - log10(ic50_nM)",
+      "ranking": {
+        "metric": "pIC50",
+        "top_order": "descending; higher pIC50 indicates stronger activity",
+        "bottom_order": "ascending; lower pIC50 indicates weaker activity",
+        "records_per_output": 10
+      }
+    }
+  },
+  "record_counts": {
+    "raw": 100,
+    "cleaned": 94,
+    "prepared": 94,
+    "analyzed": 56,
+    "unique_molecules": {
+      "raw": 83,
+      "cleaned": 79,
+      "prepared": 79,
+      "analyzed": 43
+    }
+  },
+  "software_versions": {
+    "chembl_webresource_client": "0.10.9",
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "rdkit": "2026.3.5"
+  }
+}

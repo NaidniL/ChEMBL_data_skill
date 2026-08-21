@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = PROJECT_ROOT / ".agents/skills/engineering-workflow/scripts/fetch_activities.py"
+SCRIPT = PROJECT_ROOT / ".agents/skills/chembl-workflow/scripts/fetch_activities.py"
 
 
 class FetchActivitiesTest(unittest.TestCase):

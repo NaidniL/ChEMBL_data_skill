@@ -1,0 +1,11 @@
+{
+  "valid": true,
+  "message": "Validation passed: raw=20, cleaned=20, prepared=20, analyzed=14.",
+  "summary": {
+    "raw": 20,
+    "cleaned": 20,
+    "prepared": 20,
+    "analyzed": 14
+  },
+  "errors": []
+}

@@ -1,0 +1,21 @@
+{
+  "target_chembl_id": "CHEMBL203",
+  "activity_type": "IC50",
+  "record_count": 20,
+  "columns": [
+    "activity_id",
+    "molecule_chembl_id",
+    "target_chembl_id",
+    "assay_chembl_id",
+    "standard_type",
+    "standard_relation",
+    "standard_value",
+    "standard_units",
+    "pchembl_value",
+    "data_validity_comment",
+    "potential_duplicate"
+  ],
+  "client_cache_enabled": false,
+  "cache_policy": "disabled by default; enable only with --use-cache",
+  "query_limit": 20
+}

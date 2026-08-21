@@ -393,7 +393,7 @@ Proposed location:
 ```text
 .agents/
 └── skills/
-    └── chembl-dataset/
+    └── chembl-workflow/
         ├── SKILL.md
         ├── scripts/
         └── references/
@@ -563,7 +563,7 @@ Status:
 Integrate the deterministic pipeline with the Codex Skill:
 
 ```text
-.agents/skills/engineering-workflow/
+.agents/skills/chembl-workflow/
 ```
 
 First target:
