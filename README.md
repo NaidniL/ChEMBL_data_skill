@@ -2,7 +2,7 @@
 
 Build reproducible ChEMBL IC50/pIC50 datasets for a confirmed biological target.
 
-The repo-scoped Codex skill is in `.agents/skills/engineering-workflow/`. It resolves a user-supplied target, fetches raw ChEMBL activities, cleans and joins them with validated molecular structures, creates RDKit Morgan fingerprints, converts exact IC50 values to pIC50, and writes statistics and rankings.
+The repo-scoped Codex skill is in `.agents/skills/engineering-workflow/`. It resolves a user-supplied target, fetches raw ChEMBL activities, cleans and joins them with validated molecular structures, creates RDKit Morgan fingerprints, converts exact IC50 values to pIC50, writes statistics and rankings, and validates the resulting artifact chain with provenance metadata.
 
 ```bash
 python .agents/skills/engineering-workflow/scripts/discover_target.py --uniprot-accession P00533

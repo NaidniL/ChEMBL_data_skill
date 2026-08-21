@@ -75,13 +75,19 @@ class AnalyzeDatasetUnitTest(unittest.TestCase):
             {
                 "wrong_activity_type": 1,
                 "non_exact_relation": 1,
-                "data_validity_comment": 1,
+                "outside_typical_range": 1,
                 "missing_standard_value": 1,
                 "invalid_standard_value": 1,
                 "non_positive_standard_value": 1,
                 "unsupported_or_missing_unit": 1,
             },
         )
+
+    def test_unknown_validity_comment_requires_review(self) -> None:
+        frame = pd.DataFrame([prepared_record(data_validity_comment="Unverified assay condition")])
+
+        with self.assertRaisesRegex(ValueError, "Unknown data_validity_comment values require review"):
+            analyze_dataset.analyze_ic50(frame, "IC50")
 
     def test_supported_unit_variants_are_converted_to_nm(self) -> None:
         frame = pd.DataFrame(

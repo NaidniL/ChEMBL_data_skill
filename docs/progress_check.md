@@ -324,46 +324,45 @@ Goal: make the pipeline auditable and resistant to silent failure.
 
 ### Validation invariants
 
-* [ ] Required columns exist
-* [ ] Required fields contain no unexpected missing values
-* [ ] Quantitative values are numeric
-* [ ] Log-transformed values originate from positive measurements
-* [ ] Units are consistent after normalization
-* [ ] Molecule IDs are present
-* [ ] SMILES are RDKit-parseable
-* [ ] Fingerprints are valid
-* [ ] Fingerprint dimensions are consistent
-* [ ] Merge counts reconcile
-* [ ] Final reported row counts reconcile with exclusions
+* [x] Required columns exist
+* [x] Required fields contain no unexpected missing values
+* [x] Quantitative values are numeric
+* [x] Log-transformed values originate from positive measurements
+* [x] Units are consistent after normalization
+* [x] Molecule IDs are present
+* [x] SMILES are RDKit-parseable
+* [x] Fingerprints are valid
+* [x] Fingerprint dimensions are consistent
+* [x] Merge counts reconcile
+* [x] Final reported row counts reconcile with exclusions
 
 ### Exclusion accounting
 
 Track counts for at least:
 
-* [ ] wrong activity type
-* [ ] non-exact/censored relation
-* [ ] missing required value
-* [ ] invalid numeric value
-* [ ] unsupported unit
-* [ ] missing structure
-* [ ] invalid SMILES
-* [ ] exact duplicate
-* [ ] merge loss
+* [x] wrong activity type
+* [x] non-exact/censored relation
+* [x] missing required value
+* [x] invalid numeric value
+* [x] unsupported unit
+* [x] missing structure
+* [x] invalid SMILES
+* [x] exact duplicate
+* [x] merge loss
 
 ### Run metadata
 
-* [ ] Record original target query
-* [ ] Record resolved target
-* [ ] Record ChEMBL target ID
-* [ ] Record selected activity property
-* [ ] Record filters
-* [ ] Record aggregation strategy
-* [ ] Record unit-conversion policy
-* [ ] Record fingerprint configuration
-* [ ] Record raw/final record counts
-* [ ] Record unique molecule counts
-* [ ] Record execution timestamp
-* [ ] Record relevant package versions where practical
+* [x] Record original target query
+* [x] Record resolved target and ChEMBL target ID
+* [x] Record selected activity property
+* [x] Record filters
+* [x] Record aggregation strategy
+* [x] Record unit-conversion policy
+* [x] Record fingerprint configuration
+* [x] Record raw/final record counts
+* [x] Record unique molecule counts
+* [x] Record execution timestamp
+* [x] Record relevant package versions
 
 Proposed artifacts:
 
@@ -381,7 +380,7 @@ outputs/run_manifest.json
 * [ ] At least one second target verifies that the pipeline is not EGFR-specific
 * [x] Previous working cases remain green after modifications
 
-**Status:** not started
+**Status:** complete
 
 ---
 
@@ -496,14 +495,14 @@ These correspond to Section 30 of `workflow_spec.md`.
 * [x] **AC12** — Descriptive statistics are generated deterministically.
 * [x] **AC13** — High/low activity records are ranked with the correct direction.
 * [x] **AC14** — Every destructive filtering stage reports exclusion counts.
-* [ ] **AC15** — The final dataset passes defined validation checks.
+* [x] **AC15** — The final dataset passes defined validation checks.
 * [ ] **AC16** — The Agent summarizes the run without inventing information.
 * [ ] **AC17** — A fresh Codex session can use the Skill without requiring knowledge of ChEMBL API details or internal column names.
 
 Current acceptance progress:
 
 ```text
-Implemented and validated: 10 / 17
+Implemented and validated: 11 / 17
 ```
 
 ---
@@ -561,25 +560,24 @@ Status:
 
 # Immediate Next Step
 
-Implement validation, provenance, and additional regression coverage:
+Integrate the deterministic pipeline with the Codex Skill:
 
 ```text
-tests/
+.agents/skills/engineering-workflow/
 ```
 
 First target:
 
 ```text
-M1–M4 artifacts
+M1–M5 artifacts
 ```
 
 Target milestone:
 
 ```text
-M1–M4 artifacts
-→ reconciled exclusions
-→ run manifest
-→ regression coverage
+natural-language request
+→ deterministic M1–M5 execution
+→ evidence-grounded summary
 ```
 
-Do not proceed to an interface or broader target coverage until this boundary works reliably.
+Do not add an interface until the Skill can invoke and summarize M1–M5 reliably.

@@ -30,6 +30,7 @@ UNIT_TO_NM = {
     "μM": 1_000.0,
     "mM": 1_000_000.0,
 }
+EXCLUDED_VALIDITY_COMMENT = "Outside typical range"
 
 
 def parse_args() -> argparse.Namespace:
@@ -87,15 +88,23 @@ def analyze_ic50(frame: pd.DataFrame, activity_type: str) -> tuple[pd.DataFrame,
 
     selected_type = dataset["standard_type"].eq(activity_type)
     exact_relation = dataset["standard_relation"].eq("=")
-    has_validity_comment = dataset["data_validity_comment"].notna()
+    unknown_validity_comments = (dataset["data_validity_comment"].notna() & ~dataset["data_validity_comment"].eq(EXCLUDED_VALIDITY_COMMENT)).fillna(False)
+    if unknown_validity_comments.any():
+        unknown_values = sorted(dataset.loc[unknown_validity_comments, "data_validity_comment"].unique())
+        unknown_activity_ids = dataset.loc[unknown_validity_comments, "activity_id"].tolist()
+        raise ValueError(
+            "Unknown data_validity_comment values require review: "
+            f"{unknown_values!r} (activity_id={unknown_activity_ids!r})."
+        )
+    outside_typical_range = dataset["data_validity_comment"].eq(EXCLUDED_VALIDITY_COMMENT).fillna(False)
     supported_unit = dataset["standard_units"].isin(UNIT_TO_NM)
     remaining = pd.Series(True, index=dataset.index)
     wrong_activity_type = remaining & ~selected_type
     remaining &= selected_type
     non_exact_relation = remaining & ~exact_relation
     remaining &= exact_relation
-    data_validity_comment = remaining & has_validity_comment
-    remaining &= ~has_validity_comment
+    excluded_validity_comment = remaining & outside_typical_range
+    remaining &= ~outside_typical_range
     missing_value = remaining & missing_standard_value
     remaining &= ~missing_standard_value
     invalid_value = remaining & invalid_standard_value
@@ -114,7 +123,7 @@ def analyze_ic50(frame: pd.DataFrame, activity_type: str) -> tuple[pd.DataFrame,
     exclusions = {
         "wrong_activity_type": int(wrong_activity_type.sum()),
         "non_exact_relation": int(non_exact_relation.sum()),
-        "data_validity_comment": int(data_validity_comment.sum()),
+        "outside_typical_range": int(excluded_validity_comment.sum()),
         "missing_standard_value": int(missing_value.sum()),
         "invalid_standard_value": int(invalid_value.sum()),
         "non_positive_standard_value": int(non_positive_value.sum()),
@@ -126,6 +135,18 @@ def analyze_ic50(frame: pd.DataFrame, activity_type: str) -> tuple[pd.DataFrame,
         "exact_relation_required": "=",
         "canonical_ic50_unit": "nM",
         "unit_to_nM_factors": UNIT_TO_NM,
+        "semantic_filter": {
+            "activity_type": activity_type,
+            "standard_relation": "=",
+            "data_validity_comment": {
+                "accepted": None,
+                "excluded": [EXCLUDED_VALIDITY_COMMENT],
+                "unknown_non_null": "fail / report for review",
+            },
+            "standard_value": "finite and greater than zero",
+            "supported_units": list(UNIT_TO_NM),
+        },
+        "transformation": "pIC50 = 9 - log10(ic50_nM)",
         "exclusions": exclusions,
         "analyzed_records": int(len(analyzed)),
         "unique_molecules": int(analyzed["molecule_chembl_id"].nunique()),

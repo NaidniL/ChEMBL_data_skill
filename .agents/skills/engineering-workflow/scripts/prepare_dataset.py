@@ -238,6 +238,15 @@ def prepare_dataset(activities_csv: Path, output_dir: Path, use_cache: bool, ove
         "unique_molecules_requested": int(len(molecule_ids)),
         "client_cache_enabled": use_cache,
         "aggregation_strategy": "keep_all",
+        "activity_cleaning": {
+            "columns": list(ACTIVITY_COLUMNS),
+            "required_columns": list(REQUIRED_ACTIVITY_COLUMNS),
+            "exact_duplicate_policy": "remove rows identical across all activity columns",
+        },
+        "structure_validation": {
+            "statuses": ["valid", "missing_smiles", "invalid_smiles"],
+            "validity_check": "RDKit Chem.MolFromSmiles",
+        },
         "fingerprint": {
             "type": "Morgan",
             "radius": FINGERPRINT_RADIUS,
