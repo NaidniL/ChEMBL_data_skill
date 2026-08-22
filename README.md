@@ -18,3 +18,11 @@ Install dependencies first:
 ```bash
 python -m pip install -r requirements.txt
 ```
+
+Run the presentation layer from the isolated environment:
+
+```bash
+.venv/bin/streamlit run app.py
+```
+
+Each Streamlit invocation runs the deterministic CLI stages and writes its artifacts to a separate timestamped directory under `runs/`. Live ChEMBL runs default to a positive record limit of 200, configurable in the UI. The offline option lets users choose a valid fixture directory directly under `tests/fixtures/` and makes no ChEMBL request.

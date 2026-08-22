@@ -54,6 +54,11 @@ new_client: Any | None = None
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--activities-csv", required=True, type=Path, help="M2 activities.csv file.")
+    parser.add_argument(
+        "--structures-csv",
+        type=Path,
+        help="Optional offline structure fixture with molecule_chembl_id and canonical_smiles columns.",
+    )
     parser.add_argument("--output-dir", required=True, type=Path, help="Directory for M3 artifacts.")
     parser.add_argument(
         "--use-cache",
@@ -186,6 +191,38 @@ def validate_structures(molecule_ids: list[str], records: list[dict[str, Any]]) 
     }
 
 
+def load_structure_fixture(molecule_ids: list[str], structures_csv: Path) -> tuple[pd.DataFrame, dict[str, int]]:
+    """Validate an offline structure fixture using the same M3 structure policy."""
+    fixture = pd.read_csv(structures_csv)
+    required_columns = {"molecule_chembl_id", "canonical_smiles"}
+    missing_columns = sorted(required_columns.difference(fixture.columns))
+    if missing_columns:
+        raise ValueError(f"Structure fixture lacks required columns: {', '.join(missing_columns)}")
+    if fixture["molecule_chembl_id"].isna().any() or fixture["molecule_chembl_id"].duplicated().any():
+        raise ValueError("Structure fixture must contain one non-null row per molecule_chembl_id.")
+
+    fixture_ids = fixture["molecule_chembl_id"].astype("string").str.strip()
+    expected_ids = set(molecule_ids)
+    actual_ids = set(fixture_ids)
+    if actual_ids != expected_ids:
+        missing_ids = sorted(expected_ids.difference(actual_ids))
+        unexpected_ids = sorted(actual_ids.difference(expected_ids))
+        raise ValueError(
+            "Structure fixture molecule IDs must match cleaned activities exactly "
+            f"(missing={missing_ids!r}, unexpected={unexpected_ids!r})."
+        )
+
+    smiles_by_id = dict(zip(fixture_ids, fixture["canonical_smiles"], strict=True))
+    records = [
+        {
+            "molecule_chembl_id": molecule_chembl_id,
+            "molecule_structures": {"canonical_smiles": smiles_by_id[molecule_chembl_id]},
+        }
+        for molecule_chembl_id in molecule_ids
+    ]
+    return validate_structures(molecule_ids, records)
+
+
 def merge_and_fingerprint(activities: pd.DataFrame, structures: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
     valid_structures = structures.loc[structures["structure_status"] == "valid"].copy()
     merged = activities.merge(valid_structures, on="molecule_chembl_id", how="inner", validate="many_to_one", sort=False)
@@ -214,7 +251,13 @@ def merge_and_fingerprint(activities: pd.DataFrame, structures: pd.DataFrame) ->
     }
 
 
-def prepare_dataset(activities_csv: Path, output_dir: Path, use_cache: bool, overwrite: bool) -> dict[str, Any]:
+def prepare_dataset(
+    activities_csv: Path,
+    output_dir: Path,
+    use_cache: bool,
+    overwrite: bool,
+    structures_csv: Path | None = None,
+) -> dict[str, Any]:
     artifacts = {
         "activities_clean_csv": output_dir / "activities_clean.csv",
         "structures_csv": output_dir / "structures.csv",
@@ -229,7 +272,12 @@ def prepare_dataset(activities_csv: Path, output_dir: Path, use_cache: bool, ove
     if cleaned_activities.empty:
         raise ValueError("No activity records remain after required-field cleaning.")
     molecule_ids = cleaned_activities["molecule_chembl_id"].drop_duplicates().tolist()
-    structures, structure_metadata = validate_structures(molecule_ids, fetch_structure_records(molecule_ids, use_cache))
+    if structures_csv is None:
+        structures, structure_metadata = validate_structures(molecule_ids, fetch_structure_records(molecule_ids, use_cache))
+        structure_source = "ChEMBL API"
+    else:
+        structures, structure_metadata = load_structure_fixture(molecule_ids, structures_csv)
+        structure_source = f"offline fixture: {structures_csv}"
     prepared, merge_metadata = merge_and_fingerprint(cleaned_activities, structures)
     metadata = {
         **activity_metadata,
@@ -237,6 +285,7 @@ def prepare_dataset(activities_csv: Path, output_dir: Path, use_cache: bool, ove
         **merge_metadata,
         "unique_molecules_requested": int(len(molecule_ids)),
         "client_cache_enabled": use_cache,
+        "structure_source": structure_source,
         "aggregation_strategy": "keep_all",
         "activity_cleaning": {
             "columns": list(ACTIVITY_COLUMNS),

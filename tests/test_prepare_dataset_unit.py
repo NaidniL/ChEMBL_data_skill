@@ -121,6 +121,42 @@ class PrepareDatasetUnitTest(unittest.TestCase):
         )
         self.assertIn("prepared_dataset_csv", report)
 
+    def test_offline_structure_fixture_is_validated_without_a_chembl_request(self) -> None:
+        raw_activities = pd.DataFrame(
+            [
+                activity_record(),
+                activity_record(activity_id=2, molecule_chembl_id="CHEMBL26", standard_value="20.0"),
+            ]
+        )
+        structures = pd.DataFrame(
+            [
+                {"molecule_chembl_id": "CHEMBL25", "canonical_smiles": "CCO"},
+                {"molecule_chembl_id": "CHEMBL26", "canonical_smiles": "CCN"},
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            directory = Path(temporary_directory)
+            activities_csv = directory / "activities.csv"
+            structures_csv = directory / "structures.csv"
+            output_dir = directory / "prepared"
+            raw_activities.to_csv(activities_csv, index=False)
+            structures.to_csv(structures_csv, index=False)
+            with patch.object(prepare_dataset, "fetch_structure_records") as fetch:
+                prepare_dataset.prepare_dataset(
+                    activities_csv,
+                    output_dir,
+                    use_cache=False,
+                    overwrite=False,
+                    structures_csv=structures_csv,
+                )
+
+            metadata = json.loads((output_dir / "preparation_metadata.json").read_text(encoding="utf-8"))
+
+        fetch.assert_not_called()
+        self.assertEqual(metadata["structure_source"], f"offline fixture: {structures_csv}")
+        self.assertEqual(metadata["valid_structures"], 2)
+
     def test_structure_response_for_wrong_molecule_fails(self) -> None:
         with self.assertRaisesRegex(ValueError, "different molecule"):
             prepare_dataset.validate_structures(

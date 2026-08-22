@@ -4,3 +4,4 @@ numpy>=1.26,<3
 pandas>=2.2,<4
 PyYAML>=6.0,<7
 rdkit>=2024.9,<2027
+streamlit>=1.39,<2

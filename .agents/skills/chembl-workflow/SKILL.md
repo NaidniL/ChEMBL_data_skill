@@ -72,6 +72,23 @@ It should explain the conflict and may offer either:
 1. to run the existing workflow under the supported policy; or
 2. to treat the request as a deliberate Skill-development task that changes the scientific policy and provenance.
 
+## Streamlit boundary
+
+The Streamlit application is a presentation layer only.
+
+It must not implement or duplicate target resolution, data acquisition, activity filtering, structure processing, fingerprint generation, unit normalization, pIC50 transformation, statistical analysis, exclusion accounting, or validation.
+
+All scientific and data-processing behavior must be delegated to the existing M1–M5 deterministic workflow.
+
+The Streamlit layer may only:
+
+- collect user input;
+- construct workflow invocation parameters;
+- start and monitor workflow execution;
+- surface execution errors;
+- read generated artifacts;
+- render artifact contents in the UI.
+
 ## Workflow
 
 1. Ask for a biological target name, gene symbol, protein name, or ChEMBL target ID. If the requested target or species is ambiguous, do not choose a candidate silently.
